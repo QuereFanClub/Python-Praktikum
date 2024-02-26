@@ -11,9 +11,3 @@ def cross_sum(n, b):
         n = n // b
 
     return result
-
-# Beispiel:
-dezimalzahl = 212
-basis = 16
-ergebnis = cross_sum(dezimalzahl, basis)
-print(f"Die Quersumme der Dezimalzahl {dezimalzahl} zur Basis {basis} ist: {ergebnis}")

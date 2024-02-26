@@ -14,6 +14,3 @@ def shortName(name: str):
 
     final_name += " " + str(name_array[len(name_array) - 1])
     return final_name
-
-
-print(shortName(input("Gib einen Namen ein: \n")))
