@@ -27,3 +27,6 @@ def tokenize(string):
             raise ValueError("Invalid token at position " + str(pos))
 
     return tokens
+
+
+print(tokenize("3+3-1"))
