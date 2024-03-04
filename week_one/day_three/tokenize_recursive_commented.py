@@ -46,4 +46,4 @@ def tokenize(string, pos=0):
 
 
 # Example usage
-print(tokenize("3+3-1"))
+print(tokenize("123-1"))

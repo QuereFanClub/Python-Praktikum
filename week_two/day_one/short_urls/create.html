@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Kurze URLs</title>
+    <style>
+        body {
+            padding: 10vh 10vw;
+            background: #eee;
+            color: #444;
+            font-family: sans;
+            font-size: 12pt;
+        }
+
+        input[type=text] {
+            padding: 5px 10px;
+            font-size: 12pt;
+            width: 80%;
+            height: 30px;
+            background: #eef;
+        }
+
+        input[type=submit] {
+            padding: 10px 20px;
+            font-size: 16pt;
+        }
+    </style>
+</head>
+<body>
+<form action="/week_two/day_one/short_urls/create.html" method="POST">
+    <h1>Kurze URL Erstellen</h1>
+    <input type="text" name="long" placeholder="lange URL"/>
+    <input type="submit" value="erstellen"/>
+</form>
+</body>
+</html>
