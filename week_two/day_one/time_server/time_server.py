@@ -1,5 +1,11 @@
 # Bearbeitung mit Sandro Schusters, Luca Stoltenberg
 
+"""
+To make this work remove the path until "/uhrzeit.html"
+Remove every import except time
+"""
+
+
 from http.server import SimpleHTTPRequestHandler
 from socketserver import TCPServer
 import time
