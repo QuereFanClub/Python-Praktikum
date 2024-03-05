@@ -1,4 +1,4 @@
-# Zusammenarbeit mit Sandro Schusters
+# Zusammenarbeit mit Philip Langenbrink
 
 import sqlite3
 
