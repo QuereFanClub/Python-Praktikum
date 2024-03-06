@@ -54,18 +54,31 @@ class DynamicRequestHandler(SimpleHTTPRequestHandler):
             SimpleHTTPRequestHandler.do_GET(self)
 
     def do_POST(self):
+        # Globale Variablen für die Zuordnung von IDs zu URLs und die Anfragen-Zählung
         global MAPPEDS_URLS, request_id
+
+        # Import der Funktion parse_qs zum Parsen von Query-Strings
         from urllib.parse import parse_qs
-        #print(int(self.headers['Content-Length']))
+
+        # Extrahiere die Länge des POST-Dateninhalts aus den HTTP-Headern
         content_length = int(self.headers['content-length'])
+
+        # Lese den POST-Datenstrom entsprechend der Länge
         post_data = self.rfile.read(content_length)
+
+        # Parse die POST-Daten in ein Dictionary von Feldern
         fields = parse_qs(post_data)
+
+        # Extrahiere die lange URL aus den geparsten Feldern und dekodiere sie von Bytes zu UTF-8
         long_url = fields[b'long'][0].decode("utf-8")
 
+        # Speichere die Zuordnung der neuen langen URL zu einer eindeutigen ID im globalen Dictionary
         MAPPEDS_URLS[request_id] = long_url
-        short_url = f"http://localhost:8000/{request_id}"
-        request_id += 1
 
+        # Erstelle die kurze URL durch Hinzufügen der eindeutigen ID zur Basis-URL
+        short_url = f"http://localhost:8000/{request_id}"
+
+        # Erstelle den HTML-Code für die Antwortseite, ersetze Platzhalter mit den Werten
         response_text = """
         <!DOCTYPE html>
         <html>
@@ -85,7 +98,22 @@ class DynamicRequestHandler(SimpleHTTPRequestHandler):
         </html>
         """.format(short_url, long_url)
 
+        # Sende eine HTTP-Antwort mit dem Statuscode 200 (OK)
         self.send_response(200)
+
+        # Setze den HTTP-Header für den Inhaltstyp auf HTML
         self.send_header("Content-type", "text/html")
+
+        # Beende die Header-Sektion der HTTP-Antwort
         self.end_headers()
+
+        # Sende den erstellten HTML-Code als Bytes über den Datenstrom zum Client
         self.wfile.write(bytes(response_text, 'utf-8'))
+        
+        
+if __name__ == "__main__":
+    PORT = 8000
+    Handler = DynamicRequestHandler
+    with socketserver.TCPServer(("", PORT), Handler) as httpd:
+        print(f"Server started at localhost:{PORT}")
+        httpd.serve_forever()
