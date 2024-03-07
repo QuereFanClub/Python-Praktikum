@@ -27,10 +27,12 @@ htmlpage = """
 MAPPEDS_URLS = {}
 request_id = 0
 
+
 class DynamicRequestHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         global MAPPEDS_URLS
         path_param = self.path.lstrip('/')
+        print(f"Path: {path_param}")
 
         if path_param == "create.html":
             # "programmierte" Seite senden
@@ -41,8 +43,10 @@ class DynamicRequestHandler(SimpleHTTPRequestHandler):
 
         elif path_param.isdigit() and len(path_param) <= 5:
             path_id = int(path_param)
+            print(f"Path ID: {path_id}")
             if path_id in MAPPEDS_URLS:
                 long_url = MAPPEDS_URLS[path_id]
+                print(f"Redirecting to {long_url}")
                 self.send_response(302)
                 self.send_header("Location", long_url)
                 self.end_headers()
@@ -52,6 +56,7 @@ class DynamicRequestHandler(SimpleHTTPRequestHandler):
         else:
             # Weiterleitung an die Oberklasse
             SimpleHTTPRequestHandler.do_GET(self)
+            print("SimpleHTTPRequestHandler.do_GET(self)")
 
     def do_POST(self):
         # Globale Variablen für die Zuordnung von IDs zu URLs und die Anfragen-Zählung
@@ -62,18 +67,24 @@ class DynamicRequestHandler(SimpleHTTPRequestHandler):
 
         # Extrahiere die Länge des POST-Dateninhalts aus den HTTP-Headern
         content_length = int(self.headers['content-length'])
+        print(content_length)
+        print(self.headers['content-length'])
 
         # Lese den POST-Datenstrom entsprechend der Länge
         post_data = self.rfile.read(content_length)
+        print(f"Post data: {post_data}")
 
         # Parse die POST-Daten in ein Dictionary von Feldern
         fields = parse_qs(post_data)
+        print(f"Fields: {fields}")
 
         # Extrahiere die lange URL aus den geparsten Feldern und dekodiere sie von Bytes zu UTF-8
         long_url = fields[b'long'][0].decode("utf-8")
+        print(f"Long url: {post_data}")
 
         # Speichere die Zuordnung der neuen langen URL zu einer eindeutigen ID im globalen Dictionary
         MAPPEDS_URLS[request_id] = long_url
+        print(MAPPEDS_URLS)
 
         # Erstelle die kurze URL durch Hinzufügen der eindeutigen ID zur Basis-URL
         short_url = f"http://localhost:8000/{request_id}"
@@ -109,8 +120,8 @@ class DynamicRequestHandler(SimpleHTTPRequestHandler):
 
         # Sende den erstellten HTML-Code als Bytes über den Datenstrom zum Client
         self.wfile.write(bytes(response_text, 'utf-8'))
-        
-        
+
+
 if __name__ == "__main__":
     PORT = 8000
     Handler = DynamicRequestHandler
